@@ -1,0 +1,43 @@
+{
+  "name": "hackathon-demo",
+  "version": "0.0.1",
+  "description": "A Quasar Framework app",
+  "productName": "hackathon demo",
+  "author": "Tim Bensberg <tim.bensberg@edoc.de>",
+  "private": true,
+  "scripts": {
+    "test": "echo \"No test specified\" && exit 0",
+    "start": "node-dev --no-notify backend/app.js"
+  },
+  "dependencies": {
+    "@dvelop-sdk/app-router": "^2.0.4",
+    "@dvelop-sdk/identityprovider": "^2.1.7",
+    "@quasar/extras": "^1.0.0",
+    "axios": "^0.21.1",
+    "body-parser": "^1.19.0",
+    "cookie-parser": "^1.4.5",
+    "core-js": "^3.6.5",
+    "express": "^4.17.1",
+    "node-dev": "^7.0.0",
+    "quasar": "^2.0.0"
+  },
+  "devDependencies": {
+    "@quasar/app": "^3.0.0"
+  },
+  "browserslist": [
+    "last 10 Chrome versions",
+    "last 10 Firefox versions",
+    "last 4 Edge versions",
+    "last 7 Safari versions",
+    "last 8 Android versions",
+    "last 8 ChromeAndroid versions",
+    "last 8 FirefoxAndroid versions",
+    "last 10 iOS versions",
+    "last 5 Opera versions"
+  ],
+  "engines": {
+    "node": ">= 12.22.1",
+    "npm": ">= 6.13.4",
+    "yarn": ">= 1.21.1"
+  }
+}

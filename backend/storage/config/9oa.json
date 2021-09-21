@@ -1,0 +1,12 @@
+[
+    {
+        "apiKey": "sssssssssssssssssssssss",
+        "baseUri": "dev",
+        "title": "DEV"
+    },
+    {
+        "apiKey": "aaa",
+        "baseUri": "aaa",
+        "title": "test"
+    }
+]
