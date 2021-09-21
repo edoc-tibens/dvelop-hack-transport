@@ -3,7 +3,11 @@
     <div class="row">
       <q-btn-dropdown
         class="col q-mr-lg"
-        :label="selectedTenant.length > 0 ? selectedTenant + ' ausgewählt' : 'Tenant auswählen'"
+        :label="
+          selectedTenant.title.length > 0
+            ? selectedTenant.title + ' ausgewählt'
+            : 'Tenant auswählen'
+        "
         color="primary"
         icon="person"
       >
@@ -20,7 +24,8 @@
                 <q-avatar icon="person" color="primary" text-color="white" />
               </q-item-section>
               <q-item-section>
-                <q-item-label>{{ tenant }}</q-item-label>
+                <q-item-label>{{ tenant.title }}</q-item-label>
+                <q-item-label caption>{{ tenant.baseUri }}</q-item-label>
               </q-item-section>
             </q-item>
           </q-list>
@@ -38,23 +43,12 @@
   </q-page>
 </template>
 
-// /hackathon-demo/config/secure
-
 <script>
 export default {
   data() {
     return {
-      tenants: [
-        "tenant1",
-        "tenant2",
-        "tenant3",
-        "tenant4",
-        "tenant5",
-        "tenant6",
-        "tenant7",
-        "tenant8",
-      ],
-      selectedTenant: "",
+      tenants: [],
+      selectedTenant: { title: "", baseUri: "" },
     };
   },
   methods: {
@@ -68,6 +62,28 @@ export default {
         position: "top-right",
       });
     },
+  },
+
+  async created() {
+    var axios = require("axios");
+
+    var config = {
+      method: "get",
+      url: "https://edoc-tibens-dev.d-velop.cloud/hackathon-demo/config/secure",
+      headers: {},
+    };
+    
+    var data = []
+    
+    await axios(config)
+      .then(function (response) {
+        data = response.data;
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+      
+    this.tenants = data;
   },
 };
 </script>

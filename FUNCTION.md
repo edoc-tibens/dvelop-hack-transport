@@ -3,9 +3,7 @@
 DocumentsByNode
 
 ## Emailadressen und Links
-* [Tim Bensberg](tim.bensberg@edoc.de)
-* [Julien Tüchter](tuechter@2b-consulting.de) (julien.tuechter@web.de)
-* [Alexander Strutz](alexander.strutz@able-group.de)
+
 
 * [Git Repo](https://github.com/edoc-tibens/dvelop-hack-transport)
 * [d.3 Tenant](https://edoc-tibens-dev.d-velop.cloud)

@@ -2,6 +2,8 @@ const fs = require('fs');
 const path = require('path');
 const config = require('./config');
 
+const axios = require('axios');
+
 let basePath = path.join(`${__dirname}/../storage/config/`);
 
 /**
@@ -22,7 +24,7 @@ async function send(tenantId, authSessionID, body) {
 }
 
 async function downloadDocuments(authSessionID, documentIDs) {
-
+    console.log(authSessionID);
 }
 
 async function uploadPayload() {

@@ -8,7 +8,7 @@ module.exports = function (assetBasePath, basePath) {
 
     router.post('/', async function (req, res, next) {
         console.log(req.body);
-        await documents.send(req.tenantId, req.body);
+        await documents.send(req.tenantId, req.headers.authorization, req.body);
         res.send(req.body);
     });
 
