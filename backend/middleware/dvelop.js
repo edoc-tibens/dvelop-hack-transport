@@ -21,11 +21,11 @@ function validateRequestSignature(req, res, next) {
 }
 
 async function authenticate(req, res, next) {
-
     try {
         const authSessionId = getAuthSessionId(req);
         const principal = await idp.validateAuthSessionId(req.systemBaseUri, authSessionId);
         req.principal = principal;
+        req.authSessionId = authSessionId;
         next();
     } catch (e) {
         console.error(e);

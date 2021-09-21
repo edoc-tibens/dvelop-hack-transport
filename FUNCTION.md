@@ -1,9 +1,5 @@
 # Transportsystem für Dokumente über Tenants hinweg
-## Teamname
-DocumentsByNode
-
 ## Emailadressen und Links
-
 
 * [Git Repo](https://github.com/edoc-tibens/dvelop-hack-transport)
 * [d.3 Tenant](https://edoc-tibens-dev.d-velop.cloud)

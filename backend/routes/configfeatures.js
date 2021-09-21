@@ -18,7 +18,7 @@ module.exports = function (assetBasePath, basePath) {
                                 menuItems: [{
                                     caption: "Tenanten und API-Keys",
                                     description: "Setzen Sie Ihre Tenanten und API-Keys für den Transport von Dokumenten",
-                                    href: `${basePath}/ui/#/config`,
+                                    href: `${basePath}/ui#//config`,
                                     keywords: ["Transport", "Dokument"],
                                     configurationState: 1
                                 }

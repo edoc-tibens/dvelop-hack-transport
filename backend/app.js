@@ -14,6 +14,7 @@ const version = process.env.BUILD_VERSION || '1.0.0';
 const rootRouter = require('./routes/root')(assetBasePath, basePath, version);
 const dmsobjectextensionsRouter = require('./routes/dmsobjectextensions')(assetBasePath, basePath);
 const configRouter = require('./routes/config')(assetBasePath, basePath);
+const documentsRouter = require('./routes/documents')(assetBasePath, basePath);
 const configFeaturesRouter = require('./routes/configfeatures')(assetBasePath, basePath);
 
 const app = express();
@@ -26,7 +27,7 @@ app.use(`${basePath}/ui`, express.static(path.join(`${__dirname}/../dist/spa`)))
 app.locals.base = basePath;
 
 app.use(dvelop.setContext);
-// app.use(dvelop.validateRequestSignature) // ATTENTION: This middleware should be commented in for every request once the app runs within d.velop context
+//app.use(dvelop.validateRequestSignature) // ATTENTION: This middleware should be commented in for every request once the app runs within d.velop context
 
 app.use(express.json({ type: ['application/json', 'application/*+json'] }));
 
@@ -36,6 +37,7 @@ app.use(cookieParser());
 app.use(basePath + '/', rootRouter);
 app.use(basePath + '/dmsobjectextensions', dmsobjectextensionsRouter);
 app.use(basePath + '/config', configRouter);
+app.use(basePath + '/documents', documentsRouter);
 app.use(basePath + '/configfeatures', configFeaturesRouter);
 
 // error handler

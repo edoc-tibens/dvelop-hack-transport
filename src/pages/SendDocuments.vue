@@ -34,7 +34,7 @@
       <q-btn
         class="col"
         color="primary"
-        :disabled="selectedTenant.length <= 0"
+        :disabled="selectedTenant.title.length <= 0"
         icon="send"
         label="Senden"
         @click="sendTenant"
@@ -55,12 +55,38 @@ export default {
     selectTenant(tenant) {
       this.selectedTenant = tenant;
     },
-    sendTenant() {
-      this.$q.notify({
-        message: "Tenant wurde gesendet.",
+    async sendTenant() {
+      // /hackathon-demo/documents
+      
+        var axios = require('axios');
+        var data = {
+                        documents: location.hash.substring(21, location.hash.length -1),
+                        tenant: this.selectedTenant,
+                    }
+
+        var config = {
+        method: 'post',
+        url: 'https://edoc-tibens-dev.d-velop.cloud/hackathon-demo/documents',
+        headers: { 
+            'Content-Type': 'application/json'
+        },
+        data : data
+        };
+
+        await axios(config)
+        .then(function (response) {
+        console.log(response.data);
+        })
+        .catch(function (error) {
+        console.log(error);
+        });
+
+        this.$q.notify({
+        message: this.selectedTenant.title + " wurde gesendet.",
         color: "primary",
         position: "top-right",
       });
+
     },
   },
 
@@ -82,7 +108,7 @@ export default {
       .catch(function (error) {
         console.log(error);
       });
-      
+
     this.tenants = data;
   },
 };
