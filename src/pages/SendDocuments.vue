@@ -105,7 +105,44 @@
             :rows="rows"
             :columns="columns"
             row-key="sourceAttributeId"
-          />
+          >
+          <template v-slot:body="props">
+            <q-tr :props="props">
+              <q-td key="sourceAttributeId" :props="props">
+                {{ props.row.sourceAttributeId }}
+              </q-td>
+              <q-td key="targetAttributeId" :props="props">
+              <q-btn-dropdown
+                color="primary"
+                icon="tenant"
+                :label="
+                  selectedTargetProp.length > 0
+                    ? selectedTargetProp
+                    : 'Eigenschaft auswählen'
+                "
+              >
+                  <q-list>
+                    <q-item
+                      v-for="attribute in props.row.targetAttributeId"
+                      :key="attribute"
+                      clickable
+                      v-close-popup
+                      @click="this.selectedTargetProp = attribute"
+                    >
+                      <q-item-section avatar>
+                        <q-avatar icon="dns" color="primary" text-color="white" />
+                      </q-item-section>
+                      <q-item-section>
+                        <q-item-label>{{ attribute }}</q-item-label>
+                      </q-item-section>
+                    </q-item>
+                  </q-list>
+                </q-btn-dropdown>
+
+              </q-td>
+            </q-tr>
+          </template>
+          </q-table>
         </q-card-section>
 
         <q-card-actions align="right" class="bg-white text-teal">
@@ -139,6 +176,7 @@ export default {
       targetMapping: {},
       index: 0,
       sourceCategoryDisplayName: "",
+      selectedTargetProp: "",
       rows: [
       ],
       columns: [
@@ -205,11 +243,10 @@ export default {
 
       await axios(config)
         .then(function (response) {
-          console.log(response.data);
           success = true;
         })
         .catch(function (error) {
-          console.log(error);
+          console.error(error);
         });
 
       if (success) {
@@ -232,7 +269,6 @@ export default {
         index = 0;
     },
     async validateDocuments() {
-      console.log('Start validation');
       var axios = require("axios");
       var data = {
         documents: this.documentMetas,
@@ -264,8 +300,7 @@ export default {
       };   
 
       const mappingResponse = await axios(config);
-      this.targetMapping = mappingResponse;
-
+      this.targetMapping = mappingResponse.data;
     },
     openDialog(invalid, documentMeta){
       const propnames = [];
@@ -274,9 +309,11 @@ export default {
       invalidForCategory.forEach((invForCat) => {
         const prop = documentMeta.objectProperties.find((prop) => prop.id == invForCat.propertyID);
         propnames.push(prop.name);
-        console.log(prop.name);
       });
-      propnames.forEach((name) => this.rows.push({sourceAttributeId: name, targetAttributeId: null}));
+      // TODO: fill targetAttributeId
+      const category = this.targetMapping.objectDefinitions.find((tm) => tm.displayName === invalid.category);
+      const categoryProps = category.propertyFields.map((prop) => prop.displayName);
+      propnames.forEach((name) => this.rows.push({sourceAttributeId: name, targetAttributeId: categoryProps}));
       this.fullWidth = true;
     }
   },
@@ -297,7 +334,7 @@ export default {
         data = response.data;
       })
       .catch(function (error) {
-        console.log(error);
+        console.error(error);
       });
 
     this.tenants = data;
@@ -317,7 +354,7 @@ export default {
         data = response.data;
       })
       .catch(function (error) {
-        console.log(error);
+        console.error(error);
       });
 
     var captions = [];
@@ -330,7 +367,6 @@ export default {
     var hrefs = [];
     var documentMetas = [];
 
-    console.log(data.selectionList);
     for (var i = 0; i < data.selectionList.length; i++) {
       config = {
         method: "get",
@@ -344,7 +380,6 @@ export default {
 
       await axios(config)
         .then(function (response) {
-          console.log(response.data);
           filetypes.push(response.data.systemProperties[10].displayValue);
           captions.push(response.data.caption);
           hrefs.push(response.data._links.self.href);
@@ -356,7 +391,7 @@ export default {
           modifications.push(response.data.systemProperties[0].displayValue);
         })
         .catch(function (error) {
-          console.log(error);
+          console.error(error);
         });
     }
 

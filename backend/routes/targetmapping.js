@@ -1,5 +1,6 @@
 const express = require('express');
-const mapping = require('../services/mapping');
+const fs = require('fs');
+const path = require('path');
 const dvelop = require('../middleware/dvelop');
 
 module.exports = function (assetBasePath, basePath) {
@@ -10,7 +11,7 @@ module.exports = function (assetBasePath, basePath) {
     // ATTENTION: This page does not use the authenticate middleware meaning its publicly available
 
     router.get('/', async function (req, res, next) {
-        const mapping = await getTargetMapping('hackathon-dev-target.d-velop.cloud', authSessionID, repositoryId);
+        const mapping = JSON.parse(fs.readFileSync(path.join(__dirname, '../storage/mapping.json')));
         res.send(mapping);
     });
 
