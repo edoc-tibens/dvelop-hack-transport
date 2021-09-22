@@ -10,6 +10,7 @@
     "start": "node-dev --no-notify backend/app.js"
   },
   "dependencies": {
+    "@ablegroup/login": "^1.0.0",
     "@dvelop-sdk/app-router": "^2.0.4",
     "@dvelop-sdk/identityprovider": "^2.1.7",
     "@quasar/extras": "^1.0.0",
