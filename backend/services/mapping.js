@@ -35,4 +35,4 @@ async function createSourceProperties(metadata, baseUri, authSessionID, reposito
     
 }
 
-module.exports = { findTargetCategoryByName, createSourceProperties }
+module.exports = { findTargetCategoryByName, createSourceProperties, getTargetMapping }
