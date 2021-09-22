@@ -1,4 +1,5 @@
 const express = require('express');
+const config = require('../services/config');
 
 module.exports = function (assetBasePath, basePath) {
     const router = express.Router();
@@ -6,6 +7,8 @@ module.exports = function (assetBasePath, basePath) {
     // ATTENTION: This page does not use the authenticate middleware meaning its publicly available
 
     router.get('/', function (req, res, next) {
+        let tenantConfig = config.read(req.tenantId);
+
         res.format({
             'application/hal+json': function () {
                 res.send(
@@ -20,7 +23,7 @@ module.exports = function (assetBasePath, basePath) {
                                     description: "Setzen Sie Ihre Tenanten und API-Keys für den Transport von Dokumenten",
                                     href: `${basePath}/ui/#/config`,
                                     keywords: ["Transport", "Dokument"],
-                                    configurationState: 1
+                                    configurationState: (tenantConfig.length > 0) ? 0 : 1
                                 }
                                 ],
                                 "categories": [{
