@@ -1,7 +1,6 @@
 const fs = require('fs');
 const path = require('path');
 
-
 let basePath = path.join(`${__dirname}/../storage/config/`);
 
 function getAPIKeyByBaseUri(tenantId, baseUri) {

@@ -7,7 +7,6 @@ module.exports = function (assetBasePath, basePath) {
     // ATTENTION: This page does not use the authenticate middleware meaning its publicly available
 
     router.post('/', function (req, res, next) {
-        console.log(req.body);
         config.write(req.tenantId, req.body);
         res.send(req.body);
     });

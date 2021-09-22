@@ -5,7 +5,7 @@
         class="col q-mr-lg"
         :label="
           selectedTenant.title.length > 0
-            ? selectedTenant.title + ' ausgewählt'
+            ? selectedTenant.title
             : 'Tenant auswählen'
         "
         color="primary"
@@ -40,6 +40,29 @@
         @click="sendTenant"
       />
     </div>
+    <div class="row q-mt-xl">
+      <q-list bordered separator>
+        <div class="text-h6 q-pa-md">Ausgewählte Dokumente</div>
+        <q-separator />
+        <q-item
+          v-for="i in captions.length"
+          :key="i"
+          v-ripple
+          :active="active"
+          active-class="bg-teal-1 text-grey-8"
+        >
+          <q-item-section avatar>
+            <q-icon name="description" color="secondary" />
+          </q-item-section>
+          <q-item-section
+            ><a :href="hrefs[i - 1]" target="dapi_navigate">{{
+              captions[i - 1]
+            }}</a></q-item-section
+          >
+          <q-item-section side>{{ filetypes[i - 1] }}</q-item-section>
+        </q-item>
+      </q-list>
+    </div>
   </q-page>
 </template>
 
@@ -49,6 +72,9 @@ export default {
     return {
       tenants: [],
       selectedTenant: { title: "", baseUri: "" },
+      captions: [],
+      filetypes: [],
+      hrefs: [],
     };
   },
   methods: {
@@ -56,36 +82,45 @@ export default {
       this.selectedTenant = tenant;
     },
     async sendTenant() {
-      // /hackathon-demo/documents
-      
-        var axios = require('axios');
-        var data = {
-                        documents: location.hash.split('url=')[1],
-                        tenant: this.selectedTenant,
-                    }
+      this.$q.loading.show({
+        message: "Dokumente werden gesendet...",
+      });
 
-        var config = {
-        method: 'post',
-        url: '/hackathon-demo/documents',
-        headers: { 
-            'Content-Type': 'application/json'
+      var axios = require("axios");
+      var data = {
+        documents: location.hash.substring(21, location.hash.length),
+        tenant: this.selectedTenant,
+      };
+
+      var config = {
+        method: "post",
+        url: "/hackathon-demo/documents",
+        headers: {
+          "Content-Type": "application/json",
         },
-        data : data
-        };
+        data: data,
+      };
 
-        await axios(config)
+      var success = false;
+
+      await axios(config)
         .then(function (response) {
-        console.log(response.data);
+          console.log(response.data);
+          success = true;
         })
         .catch(function (error) {
-        console.log(error);
+          console.log(error);
         });
 
+      if (success) {
         this.$q.notify({
-        message: this.selectedTenant.title + " wurde gesendet.",
-        color: "primary",
-        position: "top-right",
-      });
+          message: "Dokumente wurden erfolgreich gesendet!",
+          color: "positive",
+          position: "bottom",
+        });
+      }
+
+      this.$q.loading.hide();
     },
   },
 
@@ -97,9 +132,9 @@ export default {
       url: "/hackathon-demo/config/secure",
       headers: {},
     };
-    
-    var data = []
-    
+
+    var data = [];
+
     await axios(config)
       .then(function (response) {
         data = response.data;
@@ -109,6 +144,56 @@ export default {
       });
 
     this.tenants = data;
+
+    config = {
+      method: "get",
+      url:
+        "https://edoc-tibens-dev.d-velop.cloud" +
+        decodeURIComponent(location.hash.split("url=")[1]),
+      headers: {},
+    };
+
+    data = [];
+
+    await axios(config)
+      .then(function (response) {
+        data = response.data;
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+
+    var captions = [];
+    var filetypes = [];
+    var hrefs = [];
+
+    console.log(data.selectionList);
+    for (var i = 0; i < data.selectionList.length; i++) {
+      config = {
+        method: "get",
+        url:
+          "https://edoc-tibens-dev.d-velop.cloud" +
+          data.selectionList[i]._links.self.href,
+        headers: {
+          Accept: "application/json, text/plain, */*",
+        },
+      };
+
+      await axios(config)
+        .then(function (response) {
+          console.log(response.data);
+          filetypes.push(response.data.systemProperties[10].displayValue);
+          captions.push(response.data.caption);
+          hrefs.push(response.data._links.self.href);
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
+    }
+
+    this.captions = captions;
+    this.filetypes = filetypes;
+    this.hrefs = hrefs;
   },
 };
 </script>

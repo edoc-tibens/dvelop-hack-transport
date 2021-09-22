@@ -1,10 +1,10 @@
 const fs = require('fs');
 const path = require('path');
-const config = require('./config');
-
 const axios = require('axios');
-
 const login = require('@ablegroup/login');
+
+const config = require('./config');
+const mapping = require('./mapping');
 
 let basePath = path.join(`${__dirname}/../storage/config/`);
 
@@ -25,12 +25,7 @@ async function send(tenantId, authSessionID, body) {
     }
     await downloadDocuments(authSessionID, documentURL, axiosOptions);
 
-    await downloadMetadata(authSessionID, documentURL, options);
-
-    /**
-     * * get list of documents
-     * foreach : download, get attributes, upload,upload attributes
-     */
+    await downloadMetadata(authSessionID, documentURL, axiosOptions);
 
     const targetRepositoryId = await getTargetRepoId(targetTenant.baseUri, targetAuthSession, axiosOptions);
 
@@ -68,11 +63,16 @@ async function downloadDocuments(authSessionID, documentURL, options) {
 async function downloadMetadata(authSessionID, documentURL, options) {
     const baseUri = 'https://edoc-tibens-dev.d-velop.cloud'; // TODO: Put me elsewhere
     options.url = baseUri + decodeURIComponent(documentURL).replace('2F', '/');
+    options.responseType = 'json';
+    options.method = 'get';
     try {
         const response = await axios(options);
         const documentHrefs = response.data.selectionList.map((doc) => doc._links.self.href);
         for (let i in documentHrefs) {
-            
+            options.url = baseUri + documentHrefs[i];
+            const documentResponse = await axios(options);
+            const documentMeta = documentResponse.data;
+            fs.writeFileSync(path.join(__dirname, `../storage/metadata/${documentMeta.id}.json`), JSON.stringify(documentMeta, null, 2));
         }
     } catch (err) {
         console.log(err);
@@ -99,29 +99,25 @@ async function uploadPayload(baseUri, targetAuthSession, targetRepositoryId, opt
 }
 
 async function uploadMetadata(contentLocations, baseUri, targetAuthSession, targetRepositoryId, options) {
-    const folderContent = fs.readdirSync(path.join(__dirname, '../storage/documents'));
-    for (let i in folderContent) {
+    const documentFolderContent = fs.readdirSync(path.join(__dirname, '../storage/documents'));
+    const metadataFolderContent = fs.readdirSync(path.join(__dirname, '../storage/metadata'));
+    for (let i in documentFolderContent) {
+        const metadata = JSON.parse(fs.readFileSync(path.join(__dirname, '../storage/metadata', metadataFolderContent[i])));
         options.url = `https://${baseUri}/dms/r/${targetRepositoryId}/o2m`;
         options.responseType = 'blob';
         options.headers = { 'Content-Type': 'application/json', Authorization: `Bearer ${targetAuthSession}` };
         options.method = 'post';
         options.data = {
-            fileName: folderContent[i],
-            sourceCategory: '5847e', // TODO
+            fileName: documentFolderContent[i],
+            sourceCategory: await mapping.findTargetCategoryByName(metadata, baseUri, targetAuthSession, targetRepositoryId),
             sourceId: `/dms/r/${targetRepositoryId}/source`,
             contentLocationUri: contentLocations[i],
-            sourceProperties: { // TODO
-                properties: [{
-                    key: "6",
-                    values: ["516615"]
-                }
-            ],
-            }
+            sourceProperties: await mapping.createSourceProperties(metadata, baseUri, targetAuthSession, targetRepositoryId) 
         };
         try {
             const response = await axios(options);
         } catch (err) {
-            console.log(err.message);
+            console.log(err);
         }
     }
 }
@@ -140,9 +136,13 @@ async function getTargetRepoId(baseUri, targetAuthSession, options) {
 }
 
 function deleteLocalDocuments() {
-    const folderContent = fs.readdirSync(path.join(__dirname, '../storage/documents'));
-    for (let i in folderContent) {
-        fs.unlinkSync(path.join(__dirname, '../storage/documents', folderContent[i]));
+    const documentFolderContent = fs.readdirSync(path.join(__dirname, '../storage/documents'));
+    for (let i in documentFolderContent) {
+        fs.unlinkSync(path.join(__dirname, '../storage/documents', documentFolderContent[i]));
+    }
+    const metaFolderContent = fs.readdirSync(path.join(__dirname, '../storage/metadata'));
+    for (let i in metaFolderContent) {
+        fs.unlinkSync(path.join(__dirname, '../storage/metadata', metaFolderContent[i]));
     }
 }
 

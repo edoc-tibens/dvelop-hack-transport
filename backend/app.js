@@ -55,4 +55,4 @@ app.use(function (err, req, res, next) {
 
 module.exports = app;
 
-app.listen(5001, () => { console.log('Started') });
+app.listen(5001, () => { console.log('Server started') });

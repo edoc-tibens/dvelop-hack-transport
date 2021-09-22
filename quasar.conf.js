@@ -79,10 +79,12 @@ module.exports = configure(function (ctx) {
     // https://v2.quasar.dev/quasar-cli/quasar-conf-js#Property%3A-framework
     framework: {
       plugins: [
-        'Notify'
+        'Notify',
+        'Loading'
       ],
       config: {
-        notify: { /* look at QuasarConfOptions from the API card */ }
+        notify: { /* look at QuasarConfOptions from the API card */ },
+        loading: { /* look at QuasarConfOptions from the API card */ }
       }
     },
     // animations: 'all', // --- includes all animations
