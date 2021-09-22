@@ -57,7 +57,6 @@ function read(tenantId) {
     let tenantFile = basePath + tenantId + ".json";
     if (fs.existsSync(tenantFile)) {
         let fileContent = JSON.parse(fs.readFileSync(tenantFile, 'utf8'));
-        console.log(fileContent.map((entry) => ({title: entry.title, baseUri: entry.baseUri})));
         return fileContent.map((entry) => ({title: entry.title, baseUri: entry.baseUri}));
     } else {
         return {};

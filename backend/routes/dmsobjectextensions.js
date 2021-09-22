@@ -20,11 +20,11 @@ module.exports = function (assetBasePath, basePath) {
                             }],
                             captions: [{
                                 "culture": "de",
-                                "caption": "Dokumente exportieren"
+                                "caption": "Dokumente transportieren"
                             },
                             {
                                 culture: "en",
-                                caption: "Export documents"
+                                caption: "Transport documents"
                             }],
                             context: "DmsObjectListContextAction",
                             uriTemplate: `${basePath}/ui/#/sendDocuments?url={dmsobjectlist.url}`,

@@ -15,6 +15,8 @@ const rootRouter = require('./routes/root')(assetBasePath, basePath, version);
 const dmsobjectextensionsRouter = require('./routes/dmsobjectextensions')(assetBasePath, basePath);
 const configRouter = require('./routes/config')(assetBasePath, basePath);
 const documentsRouter = require('./routes/documents')(assetBasePath, basePath);
+const validateRouter = require('./routes/validate')(assetBasePath, basePath);
+const targetmappingRouter = require('./routes/targetmapping')(assetBasePath, basePath);
 const configFeaturesRouter = require('./routes/configfeatures')(assetBasePath, basePath);
 
 const app = express();
@@ -38,6 +40,8 @@ app.use(basePath + '/', rootRouter);
 app.use(basePath + '/dmsobjectextensions', dmsobjectextensionsRouter);
 app.use(basePath + '/config', configRouter);
 app.use(basePath + '/documents', documentsRouter);
+app.use(basePath + '/validate', validateRouter);
+app.use(basePath + '/targetmapping', targetmappingRouter);
 app.use(basePath + '/configfeatures', configFeaturesRouter);
 
 // error handler
