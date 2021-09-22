@@ -40,7 +40,6 @@ function write (tenantId, config) {
  */
 function read(tenantId) {
     let tenantFile = basePath + tenantId + ".json";
-    console.log(tenantFile);
     if (fs.existsSync(tenantFile)) {
         let fileContent = JSON.parse(fs.readFileSync(tenantFile, 'utf8'));
         return fileContent;
@@ -56,7 +55,6 @@ function read(tenantId) {
  */
  function secureRead(tenantId) {
     let tenantFile = basePath + tenantId + ".json";
-    console.log(tenantFile);
     if (fs.existsSync(tenantFile)) {
         let fileContent = JSON.parse(fs.readFileSync(tenantFile, 'utf8'));
         console.log(fileContent.map((entry) => ({title: entry.title, baseUri: entry.baseUri})));

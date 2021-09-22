@@ -3,7 +3,7 @@
 node_modules
 
 .vscode
-backend/storage
+# backend/storage
 
 # Quasar core related directories
 .quasar

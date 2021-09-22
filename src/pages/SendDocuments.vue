@@ -9,7 +9,7 @@
             : 'Tenant auswählen'
         "
         color="primary"
-        icon="person"
+        icon="tenant"
       >
         <q-list>
           <q-list>
@@ -21,7 +21,7 @@
               @click="selectTenant(tenant)"
             >
               <q-item-section avatar>
-                <q-avatar icon="person" color="primary" text-color="white" />
+                <q-avatar icon="dns" color="primary" text-color="white" />
               </q-item-section>
               <q-item-section>
                 <q-item-label>{{ tenant.title }}</q-item-label>
@@ -60,13 +60,13 @@ export default {
       
         var axios = require('axios');
         var data = {
-                        documents: location.hash.substring(21, location.hash.length -1),
+                        documents: location.hash.split('url=')[1],
                         tenant: this.selectedTenant,
                     }
 
         var config = {
         method: 'post',
-        url: 'https://edoc-tibens-dev.d-velop.cloud/hackathon-demo/documents',
+        url: '/hackathon-demo/documents',
         headers: { 
             'Content-Type': 'application/json'
         },
@@ -86,7 +86,6 @@ export default {
         color: "primary",
         position: "top-right",
       });
-
     },
   },
 
@@ -95,7 +94,7 @@ export default {
 
     var config = {
       method: "get",
-      url: "https://edoc-tibens-dev.d-velop.cloud/hackathon-demo/config/secure",
+      url: "/hackathon-demo/config/secure",
       headers: {},
     };
     

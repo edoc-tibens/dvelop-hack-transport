@@ -11,9 +11,6 @@ module.exports = function (assetBasePath, basePath, version) {
                 res.send(
                     {
                         _links: {
-                            featuresdescription: {
-                                href: `${basePath}/features`
-                            },
                             dmsobjectextensions: {
                                 href: `${basePath}/dmsobjectextensions`
                             },

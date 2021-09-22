@@ -41,6 +41,9 @@
         style="width: 100%"
         class=""
       >
+      <template v-slot:body-cell-apiKey="props">
+          <q-td :props="props"> ******************** </q-td>
+        </template>
         <template v-slot:body-cell-action="props">
           <q-td :props="props">
             <q-btn
@@ -160,7 +163,7 @@ export default {
 
     var config = {
       method: "get",
-      url: "https://edoc-tibens-dev.d-velop.cloud/hackathon-demo/config",
+      url: "/hackathon-demo/config",
       headers: {},
     };
 

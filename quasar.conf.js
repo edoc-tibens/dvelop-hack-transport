@@ -124,8 +124,8 @@ module.exports = configure(function (ctx) {
       },
 
       manifest: {
-        name: `Transportiere Dokumente`,
-        short_name: `hackathon demo`,
+        name: `Codeflakes transport app`,
+        short_name: `Codeflakes transport app`,
         description: `A Quasar Framework app`,
         display: 'standalone',
         orientation: 'portrait',
