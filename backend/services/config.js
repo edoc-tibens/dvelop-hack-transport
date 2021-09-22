@@ -1,19 +1,20 @@
 const fs = require('fs');
 const path = require('path');
 
+
 let basePath = path.join(`${__dirname}/../storage/config/`);
 
 function getAPIKeyByBaseUri(tenantId, baseUri) {
     let tenantData = read(tenantId);
-
+    let apiKey = false;
     tenantData.find((item) => {
         if (item.baseUri == baseUri) {
-            return item.apiKey;
+            apiKey = item.apiKey;
         }
     }
     );
 
-    return false;
+    return apiKey;
 }
 
 /**
